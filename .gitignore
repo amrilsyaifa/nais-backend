@@ -1,0 +1,13 @@
+# Dependency directories
+node_modules/
+
+# Lock
+yarn.lock
+package-lock.json
+
+# dotenv environment variables file
+.env
+.env.test
+.env.development
+.env.production
+.env.staging
