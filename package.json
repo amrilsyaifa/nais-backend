@@ -9,8 +9,13 @@
         "start": "npm run build && node build/index.js",
         "lint": "eslint . --ext .ts",
         "lint-and-fix": "eslint . --ext .ts --fix",
-        "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\" --config ./.prettierrc",
-        "format": "prettier --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\" --config ./.prettierrc"
+        "prettier-check": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\" --config ./.prettierrc",
+        "prettier-format": "prettier --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\" --config ./.prettierrc"
+    },
+    "husky": {
+      "hooks": {
+        "pre-commit": "npm run prettier-format && npm run lint"
+      }
     },
     "author": "naais",
     "license": "ISC",
@@ -20,6 +25,7 @@
         "@typescript-eslint/parser": "^4.31.1",
         "eslint": "^7.32.0",
         "eslint-plugin-no-loops": "^0.3.0",
+        "husky": "^7.0.2",
         "nodemon": "^2.0.12",
         "prettier": "2.4.0",
         "rimraf": "^3.0.2",
