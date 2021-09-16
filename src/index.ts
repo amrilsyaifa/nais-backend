@@ -1,3 +1,4 @@
+import * as dotenv from 'dotenv';
 import { ApolloServer } from 'apollo-server-express';
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 import express from 'express';
@@ -14,6 +15,10 @@ const resolvers = {
     }
 };
 
+dotenv.config();
+
+const PORT =  process.env.PORT
+
 async function startApolloServer(typeDefs: string, resolvers: { Query: { totalPosts: () => number } }) {
     const app = express();
     const httpServer = http.createServer(app);
@@ -25,9 +30,9 @@ async function startApolloServer(typeDefs: string, resolvers: { Query: { totalPo
     await server.start();
     server.applyMiddleware({ app });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await new Promise((resolve: any) => httpServer.listen({ port: 4000 }, resolve(true)));
+    await new Promise((resolve: any) => httpServer.listen({ port: PORT }, resolve(true)));
     // eslint-disable-next-line no-console
-    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+    console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
 }
 
 startApolloServer(typeDefs, resolvers);
