@@ -10,44 +10,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 module.exports = {
     up: (queryInterface, Sequelize) => __awaiter(void 0, void 0, void 0, function* () {
-        yield queryInterface.createTable('users', {
+        yield queryInterface.createTable('permissions', {
             id: {
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV4,
                 allowNull: false,
                 primaryKey: true
             },
-            role_id: {
-                type: Sequelize.UUID,
+            title: {
+                type: Sequelize.STRING,
                 allowNull: false,
+                unique: true
             },
-            profile_id: {
-                type: Sequelize.UUID,
+            slug: {
+                type: Sequelize.STRING,
                 allowNull: false,
+                unique: true
             },
-            first_name: {
+            description: {
                 type: Sequelize.STRING
             },
-            middle_name: {
-                type: Sequelize.STRING
-            },
-            last_name: {
-                type: Sequelize.STRING
-            },
-            email: {
-                type: Sequelize.STRING
-            },
-            phone_number: {
-                type: Sequelize.STRING
-            },
-            password: {
-                type: Sequelize.STRING
-            },
-            registered_at: {
-                type: Sequelize.DATE
-            },
-            last_login: {
-                type: Sequelize.DATE
+            active: {
+                type: Sequelize.BOOLEAN,
+                allowNull: false,
             },
             created_at: {
                 allowNull: false,
@@ -60,6 +45,6 @@ module.exports = {
         });
     }),
     down: (queryInterface, Sequelize) => __awaiter(void 0, void 0, void 0, function* () {
-        yield queryInterface.dropTable('users');
+        yield queryInterface.dropTable('permissions');
     })
 };
