@@ -1,4 +1,4 @@
-export interface GetRoleType {
+export interface GetPermissionType {
     id: string
     title: string
     slug: string
@@ -10,11 +10,11 @@ export interface ContextType {
     user: string | null
 }
 
-export interface GetRoleByIdType {
+export interface GetPermissionByIdType {
     id: string
 }
 
-export interface AddRoleType {
+export interface AddPermissionType {
     id: string
     title: string
     slug: string
@@ -22,7 +22,7 @@ export interface AddRoleType {
     active: boolean
 }
 
-export interface UpdateRoleType {
+export interface UpdatePermissionType {
     id: string
     title?: string
     slug?: string
@@ -30,6 +30,6 @@ export interface UpdateRoleType {
     active?: boolean
 }
 
-export interface DeleteRoleType {
+export interface DeletePermissionType {
     id: string
 }

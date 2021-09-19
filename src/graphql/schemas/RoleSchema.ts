@@ -2,8 +2,8 @@ import gql from 'graphql-tag';
 
 const schema = gql`
     type Query {
-        getRole: [Roles]
-        getRoleById(id: String!): Roles
+        getRoles: [Roles]
+        getRole(id: String!): Roles
     }
 
     type Mutation {

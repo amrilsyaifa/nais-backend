@@ -1,10 +1,10 @@
 const { role } = require('../../../databases/models');
 const { permission } = require('../../../databases/models');
-import { UsersType, ContextType, GetRoleByIdType, AddRoleType, UpdateRoleType, DeleteRoleType } from './types';
+import { GetRoleType, ContextType, GetRoleByIdType, AddRoleType, UpdateRoleType, DeleteRoleType } from './types';
 
 const Resolvers = {
     Query: {
-        getRole: async (_parent: unknown, _args: unknown, context: ContextType): Promise<UsersType> => {
+        getRoles: async (_parent: unknown, _args: unknown, context: ContextType): Promise<GetRoleType> => {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
@@ -18,7 +18,7 @@ const Resolvers = {
             });
             return response;
         },
-        getRoleById: async (_parent: unknown, { id }: GetRoleByIdType, context: ContextType): Promise<UsersType> => {
+        getRole: async (_parent: unknown, { id }: GetRoleByIdType, context: ContextType): Promise<GetRoleType> => {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
@@ -73,7 +73,7 @@ const Resolvers = {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
-            const result = await role.destroy({where: {id}});
+            const result = await role.destroy({ where: { id } });
             if (result) {
                 return 'Success';
             }

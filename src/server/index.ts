@@ -3,15 +3,18 @@ import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 import express from 'express';
 import http from 'http';
 
-// Resolver
-import AuthResolver from '../graphql/resolvers/Authentications/AuthenticationResolver';
-import UsersResolver from '../graphql/resolvers/Users/UsersResolver';
-import RoleResolver from '../graphql/resolvers/Roles/RoleResolver';
-
 // Schema
 import AuthenticationSchema from '../graphql/schemas/AuthenticationSchema';
 import UserSchema from '../graphql/schemas/UserSchema';
 import RoleSchema from '../graphql/schemas/RoleSchema';
+import PermissionSchema from '../graphql/schemas/PermissionSchema';
+
+// Resolver
+import AuthResolver from '../graphql/resolvers/Authentications/AuthenticationResolver';
+import UsersResolver from '../graphql/resolvers/Users/UsersResolver';
+import RoleResolver from '../graphql/resolvers/Roles/RoleResolver';
+import PermissionsResolver from '../graphql/resolvers/Permissions/PermissionsResolver';
+
 
 import Authentication from '../utils/Authentication';
 
@@ -20,9 +23,11 @@ const PORT = process.env.PORT || 4000;
 const StartApolloServer = async (): Promise<void> => {
     const app = express();
     const httpServer = http.createServer(app);
+
+    // Graphql
     const server = new ApolloServer({
-        typeDefs: [AuthenticationSchema, UserSchema, RoleSchema],
-        resolvers: [AuthResolver, UsersResolver, RoleResolver],
+        typeDefs: [AuthenticationSchema, UserSchema, RoleSchema, PermissionSchema],
+        resolvers: [AuthResolver, UsersResolver, RoleResolver, PermissionsResolver],
         plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
         context: async ({ req }) => {
             const tokenWithBearer = req.headers.authorization || '';
@@ -31,6 +36,8 @@ const StartApolloServer = async (): Promise<void> => {
             return {user}
         },
     });
+
+    // Start
     await server.start();
     server.applyMiddleware({ app });
     await new Promise((resolve: any) => httpServer.listen({ port: PORT }, resolve(true)));
