@@ -12,3 +12,8 @@ export interface GetMyProfileTypes {
     registered_at: string
     last_login: string
 }
+
+
+export interface getProfileById {
+    id: string
+}

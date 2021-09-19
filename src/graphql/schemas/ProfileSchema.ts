@@ -3,6 +3,8 @@ import gql from 'graphql-tag';
 const schema = gql`
     type Query {
         getMyProfiles: User
+        getProfiles: [Profile]
+        getProfile(id: String!): Profile
     }
 
     type User {
