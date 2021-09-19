@@ -9,9 +9,13 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            models.permission.belongsToMany(models.roles, {
+                through: 'role_permission',
+                foreignKey: 'permission_id',
+                as: 'permissions'
+            });
         }
     }
-    ;
     permission.init({
         title: DataTypes.STRING,
         slug: DataTypes.STRING,
@@ -20,6 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         sequelize,
         modelName: 'permission',
+        tableName: 'permissions',
+        underscored: true
     });
     return permission;
 };

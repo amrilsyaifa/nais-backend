@@ -1,25 +1,16 @@
-import Authentication from '../../utils/Authentication';
+import Authentication from '../../../utils/Authentication';
 
-const { user } = require('../../databases/models');
-import { UsersType, LoginType, LoginInput, ContextType } from './types';
+const { user } = require('../../../databases/models');
+import { LoginType, LoginInput } from './types';
 
 const Resolvers = {
-    Query: {
-        getUsers: async (_parent: unknown, _args: unknown, context: ContextType): Promise<UsersType> => {
-            if(!context.user) {
-                throw new Error('Not authenticated');
-            }
-            const response = await user.findAll();
-            return response;
-        }
-    },
     Mutation: {
         login: async (_parent: unknown, { username, password }: LoginInput): Promise<LoginType> => {
             const response = await user.findOne({
                 where: { username }
             });
 
-            if(!response) {
+            if (!response) {
                 throw new Error('Auth failed');
             }
 
@@ -28,7 +19,7 @@ const Resolvers = {
 
             // generate token
             if (compare) {
-                const token = await Authentication.generateToken(user.id, username, response.password)
+                const token = await Authentication.generateToken(user.id, username, response.password);
                 const res = {
                     user: response,
                     token
@@ -36,7 +27,15 @@ const Resolvers = {
                 return res;
             }
             throw new Error('Auth failed');
-        }
+        },
+        // register: async (_parent: unknown, payload: RegisterInput): Promise<string> => {
+        //     const { username, password } = payload;
+        //     const hashedPassword: string = await Authentication.passwordHash(password);
+
+        //     await user.create({ username, password: hashedPassword });
+
+        //     return 'ok';
+        // }
     }
 };
 

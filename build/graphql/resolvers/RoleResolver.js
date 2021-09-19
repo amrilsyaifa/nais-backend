@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,20 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-module.exports = {
-    up: (queryInterface, Sequelize) => __awaiter(void 0, void 0, void 0, function* () {
-        yield queryInterface.bulkInsert('role_permission', [
-            {
-                role_id: 'fa88ba47-5946-467e-8ac1-c06689c59db1',
-                permission_id: 'b7dd8b42-2aba-4870-b546-7f0ff7003890'
-            },
-            {
-                role_id: 'cd67467d-4e4b-42c0-a9d9-a07eb58565d1',
-                permission_id: 'b36c5ece-e6a6-45c0-9a98-820eb41fbaa7'
+Object.defineProperty(exports, "__esModule", { value: true });
+const { role } = require('../../databases/models');
+const Resolvers = {
+    Query: {
+        getRole: (_parent, _args, context) => __awaiter(void 0, void 0, void 0, function* () {
+            if (!context.user) {
+                throw new Error('Not authenticated');
             }
-        ], {});
-    }),
-    down: (queryInterface, Sequelize) => __awaiter(void 0, void 0, void 0, function* () {
-        yield queryInterface.bulkDelete('role_permission', null, {});
-    })
+            const response = yield role.findAll();
+            return response;
+        })
+    }
 };
+exports.default = Resolvers;

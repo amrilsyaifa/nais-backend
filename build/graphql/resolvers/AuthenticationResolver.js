@@ -35,7 +35,13 @@ const Resolvers = {
                 return res;
             }
             throw new Error('Auth failed');
-        })
+        }),
+        // register: async (_parent: unknown, payload: RegisterInput): Promise<string> => {
+        //     const { username, password } = payload;
+        //     const hashedPassword: string = await Authentication.passwordHash(password);
+        //     await user.create({ username, password: hashedPassword });
+        //     return 'ok';
+        // }
     }
 };
 exports.default = Resolvers;

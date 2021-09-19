@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            models.role.belongsToMany(models.permissions, { through: 'role_permission', foreignKey: 'role_id', as: "roles" });
         }
     }
     ;
@@ -20,6 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         sequelize,
         modelName: 'role',
+        tableName: "roles",
+        underscored: true
     });
     return role;
 };

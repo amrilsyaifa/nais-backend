@@ -14,13 +14,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   role_permission.init({
-    role_id: DataTypes.STRING,
-    permission_id: DataTypes.STRING
+    role_id: { type: DataTypes.STRING, allowNull: false,  primaryKey: true, },
+    permission_id: { type: DataTypes.STRING, allowNull: false },
   }, {
     sequelize,
     modelName: 'role_permission',
     tableName: "role_permission",
     timestamps: false,
+    underscored: true
   });
   return role_permission;
 };

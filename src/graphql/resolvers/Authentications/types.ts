@@ -18,12 +18,3 @@ export interface LoginType {
     token: string
     user: UsersType
 }
-
-export interface ContextType {
-    user: string | null
-}
-
-export interface RegisterInput {
-    username: string
-    password: string
-}
