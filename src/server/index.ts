@@ -8,13 +8,14 @@ import AuthenticationSchema from '../graphql/schemas/AuthenticationSchema';
 import UserSchema from '../graphql/schemas/UserSchema';
 import RoleSchema from '../graphql/schemas/RoleSchema';
 import PermissionSchema from '../graphql/schemas/PermissionSchema';
+import ProfileSchema from '../graphql/schemas/ProfileSchema';
 
 // Resolver
 import AuthResolver from '../graphql/resolvers/Authentications/AuthenticationResolver';
 import UsersResolver from '../graphql/resolvers/Users/UsersResolver';
 import RoleResolver from '../graphql/resolvers/Roles/RoleResolver';
 import PermissionsResolver from '../graphql/resolvers/Permissions/PermissionsResolver';
-
+import ProfilesResolver from '../graphql/resolvers/Profiles/ProfilesResolver';
 
 import Authentication from '../utils/Authentication';
 
@@ -26,15 +27,15 @@ const StartApolloServer = async (): Promise<void> => {
 
     // Graphql
     const server = new ApolloServer({
-        typeDefs: [AuthenticationSchema, UserSchema, RoleSchema, PermissionSchema],
-        resolvers: [AuthResolver, UsersResolver, RoleResolver, PermissionsResolver],
+        typeDefs: [AuthenticationSchema, UserSchema, ProfileSchema, RoleSchema, PermissionSchema],
+        resolvers: [AuthResolver, UsersResolver, ProfilesResolver, RoleResolver, PermissionsResolver],
         plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
         context: async ({ req }) => {
             const tokenWithBearer = req.headers.authorization || '';
             const token = tokenWithBearer.split(' ')[1];
             const user = await Authentication.getUser(token);
-            return {user}
-        },
+            return { user };
+        }
     });
 
     // Start

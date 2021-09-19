@@ -19,7 +19,7 @@ const Resolvers = {
 
             // generate token
             if (compare) {
-                const token = await Authentication.generateToken(user.id, username, response.password);
+                const token = await Authentication.generateToken(response.id, username);
                 const res = {
                     user: response,
                     token

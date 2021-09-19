@@ -18,7 +18,7 @@ const schema = gql`
         slug: String
         description: String
         active: Boolean
-        roles: [RolesPermission]
+        permissions: [RolesPermission]
     }
 
     type RolesPermission {

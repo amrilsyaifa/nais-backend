@@ -1,5 +1,4 @@
-const { role } = require('../../../databases/models');
-const { permission } = require('../../../databases/models');
+const { role, permission } = require('../../../databases/models');
 import { GetRoleType, ContextType, GetRoleByIdType, AddRoleType, UpdateRoleType, DeleteRoleType } from './types';
 
 const Resolvers = {
@@ -12,7 +11,7 @@ const Resolvers = {
                 include: [
                     {
                         model: permission,
-                        as: 'roles'
+                        as: 'permissions'
                     }
                 ]
             });

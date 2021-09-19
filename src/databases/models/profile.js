@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      models.profile.hasOne(models.user)
     }
   };
   profile.init({
@@ -26,6 +27,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'profile',
+    tableName: "profiles",
+    underscored: true
   });
   return profile;
 };
