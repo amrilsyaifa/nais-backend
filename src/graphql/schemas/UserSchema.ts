@@ -5,6 +5,10 @@ const schema = gql`
         getUsers: [Users]
     }
 
+    type Mutation {
+        changePassword(old_password: String!, password: String!, confirm_password: String!): String
+    }
+
     type Users {
         id: ID!
         role_id: String
