@@ -7,6 +7,10 @@ const schema = gql`
         getProfile(id: String!): Profile
     }
 
+    type Mutation {
+        updateMyProfiles(first_name: String, middle_name: String, last_name: String, phone_number: String, address: String, zip_code: String, place_of_birth: String, birthday: String): String!
+    }
+
     type User {
         email: String
         username: String

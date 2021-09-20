@@ -18,3 +18,13 @@ export interface LoginType {
     token: string
     user: UsersType
 }
+
+export interface RegisterInput {
+    first_name: string;
+    middle_name: string;
+    last_name: string;
+    phone_number: string;
+    email: string
+    username: string
+    password: string
+}
