@@ -25,9 +25,9 @@ Authentication.passwordCompare = (text, encryptedText) => __awaiter(void 0, void
     const result = yield bcrypt_1.default.compare(text, encryptedText);
     return result;
 });
-Authentication.generateToken = (id, username, password) => {
+Authentication.generateToken = (id, username) => {
     const secretKey = process.env.JWT_SECRET_KEY || 'secret';
-    const token = jsonwebtoken_1.default.sign({ id, username, password }, secretKey);
+    const token = jsonwebtoken_1.default.sign({ id, username }, secretKey, { expiresIn: "1d" });
     return token;
 };
 Authentication.getUser = (token) => __awaiter(void 0, void 0, void 0, function* () {

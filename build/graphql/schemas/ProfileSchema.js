@@ -1,6 +1,10 @@
-import gql from 'graphql-tag';
-
-const schema = gql`
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const graphql_tag_1 = __importDefault(require("graphql-tag"));
+const schema = (0, graphql_tag_1.default) `
     scalar Upload
 
     type Query {
@@ -65,5 +69,4 @@ const schema = gql`
         url: String!
     }
 `;
-
-export default schema;
+exports.default = schema;

@@ -9,6 +9,10 @@ const schema = (0, graphql_tag_1.default) `
         getUsers: [Users]
     }
 
+    type Mutation {
+        changePassword(old_password: String!, password: String!, confirm_password: String!): String
+    }
+
     type Users {
         id: ID!
         role_id: String

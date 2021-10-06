@@ -27,3 +27,16 @@ export interface UpdateMyProfile {
     place_of_birth: string;
     birthday: string;
 }
+
+export interface UpdateImageProfile {
+    url: string;
+}
+
+export interface FileTypes {
+    file: FileType
+}
+
+export interface FileType {
+    createReadStream: any;
+    filename: any
+}

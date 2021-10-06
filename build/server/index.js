@@ -16,30 +16,36 @@ const apollo_server_express_1 = require("apollo-server-express");
 const apollo_server_core_1 = require("apollo-server-core");
 const express_1 = __importDefault(require("express"));
 const http_1 = __importDefault(require("http"));
-// Resolver
-const AuthenticationResolver_1 = __importDefault(require("../graphql/resolvers/AuthenticationResolver"));
-const UsersResolver_1 = __importDefault(require("../graphql/resolvers/UsersResolver"));
-const RoleResolver_1 = __importDefault(require("../graphql/resolvers/RoleResolver"));
 // Schema
 const AuthenticationSchema_1 = __importDefault(require("../graphql/schemas/AuthenticationSchema"));
 const UserSchema_1 = __importDefault(require("../graphql/schemas/UserSchema"));
 const RoleSchema_1 = __importDefault(require("../graphql/schemas/RoleSchema"));
+const PermissionSchema_1 = __importDefault(require("../graphql/schemas/PermissionSchema"));
+const ProfileSchema_1 = __importDefault(require("../graphql/schemas/ProfileSchema"));
+// Resolver
+const AuthenticationResolver_1 = __importDefault(require("../graphql/resolvers/Authentications/AuthenticationResolver"));
+const UsersResolver_1 = __importDefault(require("../graphql/resolvers/Users/UsersResolver"));
+const RoleResolver_1 = __importDefault(require("../graphql/resolvers/Roles/RoleResolver"));
+const PermissionsResolver_1 = __importDefault(require("../graphql/resolvers/Permissions/PermissionsResolver"));
+const ProfilesResolver_1 = __importDefault(require("../graphql/resolvers/Profiles/ProfilesResolver"));
 const Authentication_1 = __importDefault(require("../utils/Authentication"));
 const PORT = process.env.PORT || 4000;
 const StartApolloServer = () => __awaiter(void 0, void 0, void 0, function* () {
     const app = (0, express_1.default)();
     const httpServer = http_1.default.createServer(app);
+    // Graphql
     const server = new apollo_server_express_1.ApolloServer({
-        typeDefs: [AuthenticationSchema_1.default, UserSchema_1.default, RoleSchema_1.default],
-        resolvers: [AuthenticationResolver_1.default, UsersResolver_1.default, RoleResolver_1.default],
+        typeDefs: [AuthenticationSchema_1.default, UserSchema_1.default, ProfileSchema_1.default, RoleSchema_1.default, PermissionSchema_1.default],
+        resolvers: [AuthenticationResolver_1.default, UsersResolver_1.default, ProfilesResolver_1.default, RoleResolver_1.default, PermissionsResolver_1.default],
         plugins: [(0, apollo_server_core_1.ApolloServerPluginDrainHttpServer)({ httpServer })],
         context: ({ req }) => __awaiter(void 0, void 0, void 0, function* () {
             const tokenWithBearer = req.headers.authorization || '';
             const token = tokenWithBearer.split(' ')[1];
             const user = yield Authentication_1.default.getUser(token);
             return { user };
-        }),
+        })
     });
+    // Start
     yield server.start();
     server.applyMiddleware({ app });
     yield new Promise((resolve) => httpServer.listen({ port: PORT }, resolve(true)));

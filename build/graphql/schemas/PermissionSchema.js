@@ -6,33 +6,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const graphql_tag_1 = __importDefault(require("graphql-tag"));
 const schema = (0, graphql_tag_1.default) `
     type Query {
-        getRoles: [Roles]
-        getRole(id: String!): Roles
+        getPermissions: [Permissions]
+        getPermission(id: String!): Permissions
     }
 
     type Mutation {
-        addRole(id: String!,title: String!, slug: String!, description: String, active: Boolean! ): RoleMutation
-        updateRole(id: String!,title: String, slug: String, description: String, active: Boolean ): String
-        deleteRole(id: String!): String
+        addPermission(id: String!,title: String!, slug: String!, description: String, active: Boolean! ): PermissionMutation
+        updatePermission(id: String!,title: String, slug: String, description: String, active: Boolean ): String
+        deletePermission(id: String!): String
     }
 
-    type Roles {
+    type Permissions {
         id: ID!
-        title: String
-        slug: String
-        description: String
-        active: Boolean
-        permissions: [RolesPermission]
-    }
-
-    type RolesPermission {
         title: String
         slug: String
         description: String
         active: Boolean
     }
     
-    type RoleMutation {
+    type PermissionMutation {
         id: String
         title: String
         slug: String

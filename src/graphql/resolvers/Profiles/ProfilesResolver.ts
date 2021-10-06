@@ -1,5 +1,8 @@
+import path from 'path';
+import fs from 'fs';
+import { GetMyProfileTypes, ContextType, getProfileById, UpdateMyProfile, UpdateImageProfile, FileTypes } from './types';
+
 const { user, profile, role, permission } = require('../../../databases/models');
-import { GetMyProfileTypes, ContextType, getProfileById, UpdateMyProfile } from './types';
 
 const Resolvers = {
     Query: {
@@ -102,6 +105,21 @@ const Resolvers = {
             } catch (err) {
                 throw new Error('Error update role');
             }
+        },
+        updateImageProfile: async (_parent: unknown, { file }: FileTypes, context: ContextType): Promise<UpdateImageProfile> => {
+            if (!context.user) {
+                throw new Error('Not authenticated');
+            }
+
+            const PORT = process.env.PORT || 4000;
+
+            const { createReadStream, filename } = await file;
+            const stream = createReadStream();
+
+            const pathName = path.join(__dirname, `/public/images/${filename}`);
+            await stream.pipe(fs.createWriteStream(pathName));
+
+            return { url: `http://localhost:${PORT}/images/${filename}` };
         }
     }
 };

@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            models.profile.hasOne(models.user);
         }
     }
     ;
@@ -25,6 +26,8 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         sequelize,
         modelName: 'profile',
+        tableName: "profiles",
+        underscored: true
     });
     return profile;
 };

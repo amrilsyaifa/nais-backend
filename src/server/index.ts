@@ -23,6 +23,7 @@ const PORT = process.env.PORT || 4000;
 
 const StartApolloServer = async (): Promise<void> => {
     const app = express();
+   
     const httpServer = http.createServer(app);
 
     // Graphql
