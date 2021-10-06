@@ -23,8 +23,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv = __importStar(require("dotenv"));
+const express_1 = __importDefault(require("express"));
 const databases_1 = __importDefault(require("./databases"));
-const server_1 = __importDefault(require("./server"));
+const server_1 = require("./server");
 dotenv.config();
+const app = (0, express_1.default)();
 (0, databases_1.default)();
-(0, server_1.default)();
+(0, server_1.ApolloServer)(app);
+(0, server_1.WhatsappServer)();
