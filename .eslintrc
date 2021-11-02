@@ -14,6 +14,6 @@
       "no-console": 2,
       "no-loops/no-loops": 2,
       "@typescript-eslint/no-var-requires": 0,
-      "@typescript-eslint/no-explicit-any": "off"
+      "@typescript-eslint/no-explicit-any": ["off"]
     }
   }
