@@ -1,35 +1,33 @@
-const { permission } = require('../../../databases/models');
-import { GetPermissionType, ContextType, GetPermissionByIdType, AddPermissionType, UpdatePermissionType, DeletePermissionType } from './types';
+import { PermissionsModel } from '../../../databases/models/permissions.model';
+import { ContextType, GetPermissionByIdType, AddPermissionType, UpdatePermissionType, DeletePermissionType } from './types';
 
 const Resolvers = {
     Query: {
-        getPermissions: async (_parent: unknown, _args: unknown, context: ContextType): Promise<GetPermissionType> => {
+        getPermissions: async (_parent: unknown, _args: unknown, context: ContextType): Promise<any> => {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
-            const response = await permission.findAll();
+            const response = await PermissionsModel.find();
             return response;
         },
-        getPermission: async (_parent: unknown, { id }: GetPermissionByIdType, context: ContextType): Promise<GetPermissionType> => {
+        getPermission: async (_parent: unknown, { id }: GetPermissionByIdType, context: ContextType): Promise<any> => {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
-            const response = await permission.findOne({
-                where: { id }
-            });
+            const response = await PermissionsModel.findById({ _id: id });
             return response;
         }
     },
     Mutation: {
         addPermission: async (
             _parent: unknown,
-            { id, title, slug, description, active }: AddPermissionType,
+            { title, slug, description, active }: AddPermissionType,
             context: ContextType
         ): Promise<AddPermissionType> => {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
-            const permissionResult = await permission.create({ id, title, slug, description, active });
+            const permissionResult = await PermissionsModel.create({ title, slug, description, active });
             return permissionResult;
         },
         updatePermission: async (
@@ -54,7 +52,7 @@ const Resolvers = {
                 if (active) {
                     options = { ...options, active };
                 }
-                const result = await permission.update(options, { where: { id } });
+                const result = await PermissionsModel.findByIdAndUpdate({ _id: id }, options, { new: true });
                 if (result) {
                     return 'Success';
                 }
@@ -67,7 +65,7 @@ const Resolvers = {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
-            const result = await permission.destroy({ where: { id } });
+            const result = await PermissionsModel.deleteOne({ _id: id });
             if (result) {
                 return 'Success';
             }

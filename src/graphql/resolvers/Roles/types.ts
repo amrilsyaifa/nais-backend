@@ -15,11 +15,11 @@ export interface GetRoleByIdType {
 }
 
 export interface AddRoleType {
-    id: string
     title: string
     slug: string
     description?: string
     active: boolean
+    permissions?: string[]
 }
 
 export interface UpdateRoleType {
@@ -28,8 +28,17 @@ export interface UpdateRoleType {
     slug?: string
     description?: string
     active?: boolean
+    permissions?: string[]
 }
 
 export interface DeleteRoleType {
     id: string
+}
+
+
+export interface PermissionsType {
+    title: string
+    slug: string
+    description?: string
+    active: boolean
 }

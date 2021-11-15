@@ -1,47 +1,34 @@
-const { role, permission } = require('../../../databases/models');
-import { GetRoleType, ContextType, GetRoleByIdType, AddRoleType, UpdateRoleType, DeleteRoleType } from './types';
+import { RolesModel } from '../../../databases/models/roles.model';
+import { ContextType, GetRoleByIdType, AddRoleType, UpdateRoleType, DeleteRoleType } from './types';
 
 const Resolvers = {
     Query: {
-        getRoles: async (_parent: unknown, _args: unknown, context: ContextType): Promise<GetRoleType> => {
+        getRoles: async (_parent: unknown, _args: unknown, context: ContextType): Promise<any> => {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
-            const response = await role.findAll({
-                include: [
-                    {
-                        model: permission,
-                        as: 'permissions'
-                    }
-                ]
-            });
+            const response = RolesModel.find().populate("permissions");
             return response;
         },
-        getRole: async (_parent: unknown, { id }: GetRoleByIdType, context: ContextType): Promise<GetRoleType> => {
+        getRole: async (_parent: unknown, { id }: GetRoleByIdType, context: ContextType): Promise<any> => {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
-            const response = await role.findOne({
-                where: { id },
-                include: [
-                    {
-                        model: permission,
-                        as: 'roles'
-                    }
-                ]
-            });
+            const response = await RolesModel.findById({ _id: id }).populate("permissions");
             return response;
         }
     },
     Mutation: {
-        addRole: async (_parent: unknown, { id, title, slug, description, active }: AddRoleType, context: ContextType): Promise<AddRoleType> => {
+        addRole: async (_parent: unknown, { title, slug, description, active , permissions}: AddRoleType, context: ContextType): Promise<any> => {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
-            const roleResult = await role.create({ id, title, slug, description, active });
+
+            const roleResult = await RolesModel.create({ title, slug, description, active , permissions: permissions ? permissions: []});
+            roleResult.save();
             return roleResult;
         },
-        updateRole: async (_parent: unknown, { id, title, slug, description, active }: UpdateRoleType, context: ContextType): Promise<string> => {
+        updateRole: async (_parent: unknown, { id, title, slug, description, active, permissions }: UpdateRoleType, context: ContextType): Promise<string> => {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
@@ -59,7 +46,10 @@ const Resolvers = {
                 if (active) {
                     options = { ...options, active };
                 }
-                const result = await role.update(options, { where: { id } });
+                if (permissions) {
+                    options = { ...options, permissions };
+                }
+                const result = await RolesModel.findByIdAndUpdate( { _id: id }, options, { new: true });
                 if (result) {
                     return 'Success';
                 }
@@ -72,7 +62,7 @@ const Resolvers = {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
-            const result = await role.destroy({ where: { id } });
+            const result = await RolesModel.deleteOne({ _id: id });
             if (result) {
                 return 'Success';
             }

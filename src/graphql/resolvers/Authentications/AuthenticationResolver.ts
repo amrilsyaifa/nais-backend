@@ -1,17 +1,23 @@
+import { UsersModel } from '../../../databases/models/users.model';
+import { ProfilesModel } from '../../../databases/models/profiles.model';
+import { RolesModel } from '../../../databases/models/roles.model';
 import Authentication from '../../../utils/Authentication';
-
-const { user, profile, role } = require('../../../databases/models');
-const sequelize = require('../../../databases/models').sequelize;
-import { LoginType, LoginInput, RegisterInput } from './types';
+import { LoginInput, RegisterInput } from './types';
 
 const Resolvers = {
     Mutation: {
-        login: async (_parent: unknown, { username, password }: LoginInput): Promise<LoginType> => {
-            const response = await user.findOne({
-                where: { username }
-            });
+        login: async (_parent: unknown, { username, password }: LoginInput): Promise<any> => {
+            const response: any = await UsersModel.findOne({ username: username })
+                .populate('profile_id')
+                .populate({
+                    path: 'role_id',
+                    populate: {
+                        path: 'permissions',
+                        model: 'Permissions'
+                    }
+                });
 
-            if (!response) {
+            if (response === undefined || response === null) {
                 throw new Error('Auth failed');
             }
 
@@ -21,14 +27,9 @@ const Resolvers = {
             // generate token
             if (compare) {
                 // update last login
-                await user.update(
-                    { last_login: new Date() },
-                    {
-                        where: { id: response.id }
-                    }
-                );
+                await UsersModel.findByIdAndUpdate({ _id: response.id }, { last_login: new Date() });
 
-                const token = await Authentication.generateToken(response.id, username);
+                const token = await Authentication.generateToken(response._id.toString(), username);
                 const res = {
                     user: response,
                     token
@@ -40,52 +41,49 @@ const Resolvers = {
         register: async (_parent: unknown, payload: RegisterInput): Promise<string> => {
             const { first_name, middle_name, last_name, phone_number, email, username, password } = payload;
             try {
-                const result = await sequelize.transaction(async (t: any) => {
-                    // Then, we do some calls passing this transaction as an option:
-                    let optionsProfile = {};
-                    if (first_name) {
-                        optionsProfile = { ...optionsProfile, first_name };
-                    }
-                    if (middle_name) {
-                        optionsProfile = { ...optionsProfile, middle_name };
-                    }
-                    if (last_name) {
-                        optionsProfile = { ...optionsProfile, last_name };
-                    }
-                    if (phone_number) {
-                        optionsProfile = { ...optionsProfile, phone_number };
-                    }
-                    const profileReturn = await profile.create(optionsProfile, { transaction: t });
+                let optionsProfile = {};
+                if (first_name) {
+                    optionsProfile = { ...optionsProfile, first_name };
+                }
+                if (middle_name) {
+                    optionsProfile = { ...optionsProfile, middle_name };
+                }
+                if (last_name) {
+                    optionsProfile = { ...optionsProfile, last_name };
+                }
+                if (phone_number) {
+                    optionsProfile = { ...optionsProfile, phone_number };
+                }
+                const profileReturn: any = await ProfilesModel.create([optionsProfile]);
 
-                    const responseRole = await role.findOne({ where: { slug: 'user' } }, { transaction: t });
+                const responseRole: any = await RolesModel.findOne({ slug: 'user' });
 
-                    let optionsUser = {};
+                let optionsUser = {};
 
-                    if (profileReturn) {
-                        optionsUser = { ...optionsUser, ...{ profile_id: profileReturn.id } };
-                    }
-                    if (responseRole) {
-                        optionsUser = { ...optionsUser, ...{ role_id: responseRole.id } };
-                    }
-                    if (email) {
-                        optionsUser = { ...optionsUser, email };
-                    }
-                    if (username) {
-                        optionsUser = { ...optionsUser, username };
-                    }
-                    if (password) {
-                        optionsUser = { ...optionsUser, password };
-                    }
+                if (email) {
+                    optionsUser = { ...optionsUser, email };
+                }
+                if (username) {
+                    optionsUser = { ...optionsUser, username };
+                }
+                if (password) {
+                    const passwordHash = await Authentication.passwordHash(password);
+                    optionsUser = { ...optionsUser, password: passwordHash };
+                }
 
-                    optionsUser = { ...optionsUser, ...{ registered_at: new Date() } };
-                    optionsUser = { ...optionsUser, ...{ last_login: new Date() } };
+                if (profileReturn) {
+                    optionsUser = { ...optionsUser, ...{ profile_id: profileReturn.id } };
+                }
+                if (responseRole) {
+                    optionsUser = { ...optionsUser, ...{ role_id: responseRole.id } };
+                }
 
-                    const responseUser = await user.create(optionsUser, { transaction: t });
+                optionsUser = { ...optionsUser, ...{ registered_at: new Date() } };
+                optionsUser = { ...optionsUser, ...{ last_login: new Date() } };
 
-                    return responseUser
-                });
+                const responseUser = await UsersModel.create(optionsUser);
 
-                if (result) {
+                if (responseUser) {
                     return 'Success';
                 }
                 return 'Something when wrong';
@@ -93,6 +91,8 @@ const Resolvers = {
                 // If the execution reaches this line, the transaction has been committed successfully
                 // `result` is whatever was returned from the transaction callback (the `user`, in this case)
             } catch (error) {
+                // eslint-disable-next-line no-console
+                console.log('isi error ', error);
                 // If the execution reaches this line, an error occurred.
                 // The transaction has already been rolled back automatically by Sequelize!
                 throw new Error('Register failed');

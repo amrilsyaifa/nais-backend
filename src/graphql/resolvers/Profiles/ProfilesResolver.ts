@@ -1,51 +1,53 @@
+import { UsersModel } from '../../../databases/models/users.model';
+import { ProfilesModel } from '../../../databases/models/profiles.model';
 import path from 'path';
 import fs from 'fs';
-import { GetMyProfileTypes, ContextType, getProfileById, UpdateMyProfile, UpdateImageProfile, FileTypes } from './types';
-
-const { user, profile, role, permission } = require('../../../databases/models');
+import { ContextType, getProfileById, UpdateMyProfile, UpdateImageProfile, FileTypes } from './types';
 
 const Resolvers = {
     Query: {
-        getMyProfiles: async (_parent: unknown, _args: unknown, context: ContextType): Promise<GetMyProfileTypes> => {
+        getMyProfiles: async (_parent: unknown, _args: unknown, context: ContextType): Promise<any> => {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
 
-            const response = await user.findOne({
-                where: { id: context.user.id },
-                include: [
-                    {
-                        model: profile
-                    },
-                    {
-                        model: role,
-                        include: [
-                            {
-                                model: permission,
-                                as: 'permissions'
-                            }
-                        ]
-                    }
-                ]
-            });
+            // const response = await user.findOne({
+            //     where: { id: context.user.id },
+            //     include: [
+            //         {
+            //             model: profile
+            //         },
+            //         {
+            //             model: role,
+            //             include: [
+            //                 {
+            //                     model: permission,
+            //                     as: 'permissions'
+            //                 }
+            //             ]
+            //         }
+            //     ]
+            // });
+
+            const response = await UsersModel.findById({ _id: context.user.id });
 
             return response;
         },
-        getProfiles: async (_parent: unknown, _args: unknown, context: ContextType): Promise<GetMyProfileTypes> => {
+        getProfiles: async (_parent: unknown, _args: unknown, context: ContextType): Promise<any> => {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
 
-            const response = await profile.findAll({});
+            const response = await ProfilesModel.find();
 
             return response;
         },
-        getProfile: async (_parent: unknown, { id }: getProfileById, context: ContextType): Promise<GetMyProfileTypes> => {
+        getProfile: async (_parent: unknown, { id }: getProfileById, context: ContextType): Promise<any> => {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
 
-            const response = await profile.findOne({ where: { id } });
+            const response = await ProfilesModel.findById({ _id: id });
 
             return response;
         }
@@ -60,9 +62,7 @@ const Resolvers = {
                 throw new Error('Not authenticated');
             }
 
-            const userResponse = await user.findOne({
-                where: { id: context.user.id }
-            });
+            const userResponse = await UsersModel.findById({ _id: context.user.id });
 
             if (!userResponse) {
                 throw new Error('Not authenticated');
@@ -96,7 +96,7 @@ const Resolvers = {
                     options = { ...options, birthday };
                 }
 
-                const result = await profile.update(options, { where: { id: userResponse.profile_id } });
+                const result = await ProfilesModel.findByIdAndUpdate({ _id: userResponse.profile_id }, options, { new: true });
 
                 if (result) {
                     return 'Success';

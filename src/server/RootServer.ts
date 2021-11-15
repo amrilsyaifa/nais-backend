@@ -1,6 +1,7 @@
 import { ApolloServer } from 'apollo-server-express';
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 import http from 'http';
+import { connect } from 'mongoose';
 
 // Schema
 import AuthenticationSchema from '../graphql/schemas/AuthenticationSchema';
@@ -25,10 +26,20 @@ const StartServer = async (App: any, PORT: string | number): Promise<void> => {
 
     const httpServer = http.createServer(app);
 
+    // Mongoose
+    const mongoose = await connect(
+        `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
+    );
+    await mongoose.connection;
+    if (mongoose.connection.readyState === 1) {
+        // eslint-disable-next-line no-console
+        console.log('connected mongodb');
+    }
+
     // Graphql
     const server = new ApolloServer({
-        typeDefs: [AuthenticationSchema, UserSchema, ProfileSchema, RoleSchema, PermissionSchema],
-        resolvers: [AuthResolver, UsersResolver, ProfilesResolver, RoleResolver, PermissionsResolver],
+        typeDefs: [AuthenticationSchema, PermissionSchema, RoleSchema, UserSchema, ProfileSchema],
+        resolvers: [AuthResolver, PermissionsResolver, RoleResolver, UsersResolver, ProfilesResolver],
         plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
         context: async ({ req }) => {
             const tokenWithBearer = req.headers.authorization || '';
@@ -47,4 +58,4 @@ const StartServer = async (App: any, PORT: string | number): Promise<void> => {
     console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
 };
 
-export default StartServer
+export default StartServer;

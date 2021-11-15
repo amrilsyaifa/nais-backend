@@ -1,24 +1,27 @@
-
+import { UsersModel } from '../../../databases/models/users.model';
 import Authentication from '../../../utils/Authentication';
-import { UsersType, ContextType, ChangePasswordType } from './types';
-const { user } = require('../../../databases/models');
+import { ContextType, ChangePasswordType } from './types';
 
 const Resolvers = {
     Query: {
-        getUsers: async (_parent: unknown, _args: unknown, context: ContextType): Promise<UsersType> => {
+        getUsers: async (_parent: unknown, _args: unknown, context: ContextType): Promise<any> => {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
-            const response = await user.findAll();
+            const response = await UsersModel.find();
             return response;
         }
     },
     Mutation: {
-        changePassword: async (_parent: unknown,{ old_password, password, confirm_password}: ChangePasswordType, context: ContextType): Promise<string> => {
+        changePassword: async (
+            _parent: unknown,
+            { old_password, password, confirm_password }: ChangePasswordType,
+            context: ContextType
+        ): Promise<string> => {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
-            const userRes = await user.findOne({where: {id: context.user.id}});
+            const userRes: any = await UsersModel.findById({ _id: context.user.id });
 
             // check match password
             const compare = await Authentication.passwordCompare(old_password, userRes.password);
@@ -28,13 +31,13 @@ const Resolvers = {
             }
 
             // check same password
-            if(password !== confirm_password) {
+            if (password !== confirm_password) {
                 throw new Error('Password not match');
             }
 
             try {
-                const passwordHash = await Authentication.passwordHash(password)
-                const result = await user.update({password: passwordHash}, { where: { id: context.user.id } });
+                const passwordHash = await Authentication.passwordHash(password);
+                const result = await UsersModel.findByIdAndUpdate({ _id: context.user.id }, { password: passwordHash }, { new: true });
                 if (result) {
                     return 'Success';
                 }
@@ -42,7 +45,7 @@ const Resolvers = {
             } catch (error) {
                 throw new Error('Error change password');
             }
-        },
+        }
     }
 };
 

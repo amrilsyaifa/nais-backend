@@ -1,0 +1,29 @@
+version: '3.1'
+
+services:
+
+  mongo:
+    container_name: mongo-naais
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: usernaais
+      MONGO_INITDB_ROOT_PASSWORD: Am12il1991!
+    volumes:
+      - mongodb_data_container:/data/db
+
+  mongo-express:
+    container_name: mongo-express-naais
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: usernaais
+      ME_CONFIG_MONGODB_ADMINPASSWORD: Am12il1991!
+      ME_CONFIG_MONGODB_URL: mongodb://usernaais:Am12il1991!@mongo:27017/
+      
+volumes:
+  mongodb_data_container:

@@ -7,7 +7,7 @@ const schema = gql`
     }
 
     type Mutation {
-        addPermission(id: String!,title: String!, slug: String!, description: String, active: Boolean! ): PermissionMutation
+        addPermission(title: String!, slug: String!, description: String, active: Boolean! ): PermissionMutation
         updatePermission(id: String!,title: String, slug: String, description: String, active: Boolean ): String
         deletePermission(id: String!): String
     }
@@ -21,7 +21,6 @@ const schema = gql`
     }
     
     type PermissionMutation {
-        id: String
         title: String
         slug: String
         description: String

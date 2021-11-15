@@ -7,8 +7,8 @@ const schema = gql`
     }
 
     type Mutation {
-        addRole(id: String!,title: String!, slug: String!, description: String, active: Boolean! ): RoleMutation
-        updateRole(id: String!,title: String, slug: String, description: String, active: Boolean ): String
+        addRole(title: String!, slug: String!, description: String, active: Boolean!, permissions: [String] ): RoleMutation
+        updateRole(id: String!,title: String, slug: String, description: String, active: Boolean, permissions: [String] ): String
         deleteRole(id: String!): String
     }
 
@@ -29,11 +29,11 @@ const schema = gql`
     }
     
     type RoleMutation {
-        id: String
         title: String
         slug: String
         description: String
         active: Boolean
+        permissions: [String]
     }
 `;
 
