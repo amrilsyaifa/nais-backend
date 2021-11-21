@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import compression from 'compression';
 import cors from 'cors';
+import { graphqlUploadExpress } from 'graphql-upload';
 
 // Server
 import { RootServer } from './server';
@@ -28,6 +29,7 @@ class App {
         this.app.use(morgan('dev'));
         this.app.use(compression());
         this.app.use(cors());
+        this.app.use(graphqlUploadExpress());
     }
 
     protected routes(): void {

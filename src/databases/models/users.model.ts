@@ -14,7 +14,7 @@ export class Users {
     role_id!: Ref<Roles>[];
 
     @Property({ ref: 'Profiles', required: true })
-    profile_id!: Ref<Profiles>[];
+    profile_id!: Ref<Profiles>;
 
     @Field()
     @Property({ type: String, required: true, unique: true })

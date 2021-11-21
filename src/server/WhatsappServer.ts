@@ -5,7 +5,7 @@ const fs = require('fs');
 
 
 const StartWhatsappServer =  (): any => {
-    const SESSION_FILE_PATH = path.join(__dirname, '../', 'whatsapp-session.json');
+    const SESSION_FILE_PATH = path.join(__dirname, '../../', 'public/cache/whatsapp-session.json');
 
     let sessionCfg;
     if (fs.existsSync(SESSION_FILE_PATH)) {

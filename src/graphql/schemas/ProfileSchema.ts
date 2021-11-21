@@ -62,7 +62,9 @@ const schema = gql`
         active: Boolean
     }
     type File {
-        url: String!
+        filename: String!
+        mimetype: String!
+        path: String!
     }
 `;
 

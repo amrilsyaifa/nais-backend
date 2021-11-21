@@ -2,7 +2,27 @@ import { UsersModel } from '../../../databases/models/users.model';
 import { ProfilesModel } from '../../../databases/models/profiles.model';
 import path from 'path';
 import fs from 'fs';
-import { ContextType, getProfileById, UpdateMyProfile, UpdateImageProfile, FileTypes } from './types';
+import mime from 'mime-types';
+import { ContextType, getProfileById, UpdateMyProfile, UpdateImageProfile, FileTypes, TypeUserGet } from './types';
+
+const pathURL = 'images/profiles/';
+
+const processUpload = async (file: any, profile: any) => {
+    const { createReadStream, mimetype } = await file;
+    const extension = mime.extension(mimetype);
+    const stream = createReadStream();
+    const newName = `${profile.first_name}${profile.middle_name ? '-' + profile.middle_name : ''}${
+        profile.last_name ? '-' + profile.last_name : ''
+    }.${extension}`;
+    if (!(profile.image === 'profile.jpg')) {
+        const pathNameUnlink = path.join(__dirname, `../../../../`, `public/${pathURL}${profile.image}`);
+        fs.unlinkSync(pathNameUnlink);
+    }
+    const pathName = path.join(__dirname, `../../../../`, `public/${pathURL}${newName}`);
+    await stream.pipe(fs.createWriteStream(pathName));
+
+    return { path: pathURL + newName, mimetype, filename: newName };
+};
 
 const Resolvers = {
     Query: {
@@ -110,16 +130,15 @@ const Resolvers = {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
+            const userData: TypeUserGet = await UsersModel.findById({ _id: context.user.id }).populate('profile_id');
+            const ProfileData = userData?.profile_id;
 
-            const PORT = process.env.PORT || 4000;
+            // process upload file
+            const upload = await processUpload(file, ProfileData);
 
-            const { createReadStream, filename } = await file;
-            const stream = createReadStream();
-
-            const pathName = path.join(__dirname, `/public/images/${filename}`);
-            await stream.pipe(fs.createWriteStream(pathName));
-
-            return { url: `http://localhost:${PORT}/images/${filename}` };
+            // save our file to the mongodb
+            await ProfilesModel.findByIdAndUpdate({ _id: ProfileData?._id }, { image: upload.filename }, { new: true });
+            return upload;
         }
     }
 };

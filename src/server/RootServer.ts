@@ -33,7 +33,7 @@ const StartServer = async (App: any, PORT: string | number): Promise<void> => {
     await mongoose.connection;
     if (mongoose.connection.readyState === 1) {
         // eslint-disable-next-line no-console
-        console.log('connected mongodb');
+        console.log('🚀 connected mongodb');
     }
 
     // Graphql

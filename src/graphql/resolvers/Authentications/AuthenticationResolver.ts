@@ -1,3 +1,4 @@
+import { GraphQLUpload } from 'graphql-upload';
 import { UsersModel } from '../../../databases/models/users.model';
 import { ProfilesModel } from '../../../databases/models/profiles.model';
 import { RolesModel } from '../../../databases/models/roles.model';
@@ -5,6 +6,7 @@ import Authentication from '../../../utils/Authentication';
 import { LoginInput, RegisterInput } from './types';
 
 const Resolvers = {
+    Upload: GraphQLUpload,
     Mutation: {
         login: async (_parent: unknown, { username, password }: LoginInput): Promise<any> => {
             const response: any = await UsersModel.findOne({ username: username })
@@ -91,8 +93,6 @@ const Resolvers = {
                 // If the execution reaches this line, the transaction has been committed successfully
                 // `result` is whatever was returned from the transaction callback (the `user`, in this case)
             } catch (error) {
-                // eslint-disable-next-line no-console
-                console.log('isi error ', error);
                 // If the execution reaches this line, an error occurred.
                 // The transaction has already been rolled back automatically by Sequelize!
                 throw new Error('Register failed');
