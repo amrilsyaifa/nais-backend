@@ -1,11 +1,10 @@
-import { UsersModel } from '../../../databases/models/users.model';
-import { ProfilesModel } from '../../../databases/models/profiles.model';
 import path from 'path';
 import fs from 'fs';
 import mime from 'mime-types';
+import { UsersModel } from '../../../databases/models/users.model';
+import { ProfilesModel } from '../../../databases/models/profiles.model';
+import {PathURL} from 'helper/config'
 import { ContextType, getProfileById, UpdateMyProfile, UpdateImageProfile, FileTypes, TypeUserGet } from './types';
-
-const pathURL = 'images/profiles/';
 
 const processUpload = async (file: any, profile: any) => {
     const { createReadStream, mimetype } = await file;
@@ -15,13 +14,13 @@ const processUpload = async (file: any, profile: any) => {
         profile.last_name ? '-' + profile.last_name : ''
     }.${extension}`;
     if (!(profile.image === 'profile.jpg')) {
-        const pathNameUnlink = path.join(__dirname, `../../../../`, `public/${pathURL}${profile.image}`);
+        const pathNameUnlink = path.join(__dirname, `../../../../`, `public/${PathURL}${profile.image}`);
         fs.unlinkSync(pathNameUnlink);
     }
-    const pathName = path.join(__dirname, `../../../../`, `public/${pathURL}${newName}`);
+    const pathName = path.join(__dirname, `../../../../`, `public/${PathURL}${newName}`);
     await stream.pipe(fs.createWriteStream(pathName));
 
-    return { path: pathURL + newName, mimetype, filename: newName };
+    return { path: PathURL + newName, mimetype, filename: newName };
 };
 
 const Resolvers = {
@@ -31,25 +30,15 @@ const Resolvers = {
                 throw new Error('Not authenticated');
             }
 
-            // const response = await user.findOne({
-            //     where: { id: context.user.id },
-            //     include: [
-            //         {
-            //             model: profile
-            //         },
-            //         {
-            //             model: role,
-            //             include: [
-            //                 {
-            //                     model: permission,
-            //                     as: 'permissions'
-            //                 }
-            //             ]
-            //         }
-            //     ]
-            // });
-
-            const response = await UsersModel.findById({ _id: context.user.id });
+            const response = await UsersModel.findById({ _id: context.user.id })
+                .populate('profile_id')
+                .populate({
+                    path: 'role_id',
+                    populate: {
+                        path: 'permissions',
+                        model: 'Permissions'
+                    }
+                });
 
             return response;
         },
