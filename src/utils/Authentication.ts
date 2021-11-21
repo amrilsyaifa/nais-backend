@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import {CredentialProps} from './types'
+import { CredentialProps } from './types';
 
 class Authentication {
     public static passwordHash = (password: string): Promise<string> => {
@@ -15,7 +15,7 @@ class Authentication {
     public static generateToken = (id: number, username: string): string => {
         const secretKey: string = process.env.JWT_SECRET_KEY || 'secret';
 
-        const token: string = jwt.sign({ id, username }, secretKey, {expiresIn: "1d"});
+        const token: string = jwt.sign({ id, username }, secretKey, { expiresIn: '1d' });
         return token;
     };
 

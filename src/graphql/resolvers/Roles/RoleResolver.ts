@@ -7,28 +7,32 @@ const Resolvers = {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
-            const response = RolesModel.find().populate("permissions");
+            const response = RolesModel.find().populate('permissions');
             return response;
         },
         getRole: async (_parent: unknown, { id }: GetRoleByIdType, context: ContextType): Promise<any> => {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
-            const response = await RolesModel.findById({ _id: id }).populate("permissions");
+            const response = await RolesModel.findById({ _id: id }).populate('permissions');
             return response;
         }
     },
     Mutation: {
-        addRole: async (_parent: unknown, { title, slug, description, active , permissions}: AddRoleType, context: ContextType): Promise<any> => {
+        addRole: async (_parent: unknown, { title, slug, description, active, permissions }: AddRoleType, context: ContextType): Promise<any> => {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
 
-            const roleResult = await RolesModel.create({ title, slug, description, active , permissions: permissions ? permissions: []});
+            const roleResult = await RolesModel.create({ title, slug, description, active, permissions: permissions ? permissions : [] });
             roleResult.save();
             return roleResult;
         },
-        updateRole: async (_parent: unknown, { id, title, slug, description, active, permissions }: UpdateRoleType, context: ContextType): Promise<string> => {
+        updateRole: async (
+            _parent: unknown,
+            { id, title, slug, description, active, permissions }: UpdateRoleType,
+            context: ContextType
+        ): Promise<string> => {
             if (!context.user) {
                 throw new Error('Not authenticated');
             }
@@ -49,7 +53,7 @@ const Resolvers = {
                 if (permissions) {
                     options = { ...options, permissions };
                 }
-                const result = await RolesModel.findByIdAndUpdate( { _id: id }, options, { new: true });
+                const result = await RolesModel.findByIdAndUpdate({ _id: id }, options, { new: true });
                 if (result) {
                     return 'Success';
                 }

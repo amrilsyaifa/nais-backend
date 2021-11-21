@@ -12,11 +12,11 @@ export class Profiles {
     first_name!: string;
 
     @Field()
-    @Property({ type: String})
+    @Property({ type: String })
     middle_name!: string;
 
     @Field()
-    @Property({ type: String})
+    @Property({ type: String })
     last_name!: string;
 
     @Field({ nullable: true })
@@ -24,7 +24,7 @@ export class Profiles {
     phone_number!: string;
 
     @Field()
-    @Property({ type: String, required: true, default: "profile.jpg" })
+    @Property({ type: String, required: true, default: 'profile.jpg' })
     image!: string;
 
     @Field()

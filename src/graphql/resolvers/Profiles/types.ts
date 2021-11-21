@@ -30,22 +30,22 @@ export interface UpdateMyProfile {
 
 export interface UpdateImageProfile {
     path: string;
-    filename: string
-    mimetype: string
+    filename: string;
+    mimetype: string;
 }
 
 export interface FileTypes {
-    file: FileType
+    file: FileType;
 }
 
 export interface FileType {
     createReadStream: any;
-    filename: any
+    filename: any;
 }
 
 export interface TypeUserGet {
     _id: string;
-    profile_id?: TypeProfile
+    profile_id?: TypeProfile;
 }
 
 export interface TypeProfile {
@@ -53,5 +53,5 @@ export interface TypeProfile {
     first_name: string;
     middle_name?: string;
     last_name?: string;
-    image: string
+    image: string;
 }

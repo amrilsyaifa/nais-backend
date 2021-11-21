@@ -3,7 +3,6 @@ import { Field, ObjectType, ID } from 'type-graphql';
 import { Roles } from './roles.model';
 import { Profiles } from './profiles.model';
 
-
 @ObjectType({ description: 'The Users Model' })
 @modelOptions({ schemaOptions: { collection: 'users', timestamps: true } })
 export class Users {
@@ -25,7 +24,7 @@ export class Users {
     username!: string;
 
     @Field()
-    @Property({ type: String, required: true})
+    @Property({ type: String, required: true })
     password!: string;
 
     @Field()
@@ -35,7 +34,6 @@ export class Users {
     @Field()
     @Property({ type: Date, required: true })
     last_login!: Date;
-    
 }
 
 export const UsersModel = getModelForClass(Users);

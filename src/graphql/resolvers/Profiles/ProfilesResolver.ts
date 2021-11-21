@@ -3,7 +3,7 @@ import fs from 'fs';
 import mime from 'mime-types';
 import { UsersModel } from '../../../databases/models/users.model';
 import { ProfilesModel } from '../../../databases/models/profiles.model';
-import {PathURL} from 'helper/config'
+import { PathURL } from 'helper/config';
 import { ContextType, getProfileById, UpdateMyProfile, UpdateImageProfile, FileTypes, TypeUserGet } from './types';
 
 const processUpload = async (file: any, profile: any) => {

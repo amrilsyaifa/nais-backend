@@ -1,44 +1,43 @@
 export interface GetRoleType {
-    id: string
-    title: string
-    slug: string
-    description?: string
-    active: boolean
+    id: string;
+    title: string;
+    slug: string;
+    description?: string;
+    active: boolean;
 }
 
 export interface ContextType {
-    user: string | null
+    user: string | null;
 }
 
 export interface GetRoleByIdType {
-    id: string
+    id: string;
 }
 
 export interface AddRoleType {
-    title: string
-    slug: string
-    description?: string
-    active: boolean
-    permissions?: string[]
+    title: string;
+    slug: string;
+    description?: string;
+    active: boolean;
+    permissions?: string[];
 }
 
 export interface UpdateRoleType {
-    id: string
-    title?: string
-    slug?: string
-    description?: string
-    active?: boolean
-    permissions?: string[]
+    id: string;
+    title?: string;
+    slug?: string;
+    description?: string;
+    active?: boolean;
+    permissions?: string[];
 }
 
 export interface DeleteRoleType {
-    id: string
+    id: string;
 }
 
-
 export interface PermissionsType {
-    title: string
-    slug: string
-    description?: string
-    active: boolean
+    title: string;
+    slug: string;
+    description?: string;
+    active: boolean;
 }

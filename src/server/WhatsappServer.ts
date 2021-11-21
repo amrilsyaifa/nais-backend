@@ -3,8 +3,7 @@ const { Client } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 
-
-const StartWhatsappServer =  (): any => {
+const StartWhatsappServer = (): any => {
     const SESSION_FILE_PATH = path.join(__dirname, '../../', 'public/cache/whatsapp-session.json');
 
     let sessionCfg;
@@ -44,7 +43,7 @@ const StartWhatsappServer =  (): any => {
     });
 
     client.initialize();
-    return client
+    return client;
 };
 
 export default StartWhatsappServer;

@@ -10,15 +10,15 @@ export interface UsersType {
 }
 
 export interface ContextType {
-    user?: UserType
+    user?: UserType;
 }
 
 export interface UserType {
-    id: string
+    id: string;
 }
 
 export interface ChangePasswordType {
-    old_password: string 
-    password: string
-    confirm_password: string
+    old_password: string;
+    password: string;
+    confirm_password: string;
 }
